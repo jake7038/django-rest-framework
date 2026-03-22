@@ -1,12 +1,19 @@
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
-
+from rest_framework.authtoken.models import Token 
 from product.models import Product, Category
-
+from order.factories import UserFactory
 
 class ProductViewSetTest(APITestCase):
-
     def setUp(self):
+        self.client = APIClient()
+
+        self.user = UserFactory()
+        self.token = Token.objects.create(user=self.user)
+
+        # 🔥 AUTENTICAÇÃO AQUI
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
+
         self.category1 = Category.objects.create(
             title="Eletrônicos",
             slug="eletronicos"
@@ -47,7 +54,7 @@ class ProductViewSetTest(APITestCase):
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
+        self.assertEqual(len(response.data["results"]), 1)
 
     def test_retrieve_product(self):
         product = Product.objects.create(
