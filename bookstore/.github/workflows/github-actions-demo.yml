@@ -1,0 +1,14 @@
+name: Github Actions Demo
+on: [push]
+jobs:
+  Explore-Github-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      -run: echo "The job was automatically triggered by a ${{Github.event_name}}"
+      -name: Check out repository code
+        uses: Actions/checkout@v2
+      -run: echo "the ${{github.repository}} repository has been cloned"
+      -name: List file in the repository
+        run: |
+          ls ${{github.workplace}}
+      - run: echo "This job's status is ${{job.status}}."
