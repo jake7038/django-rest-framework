@@ -24,12 +24,12 @@ jobs:
         python -m ensurepip
         python -m pip install --upgrade pip
         python -m pip install poetry==${{ matrix.poetry-version }}
-      - name: View poetry --help
-        run: poetry --help
+    - name: View poetry --help
+      run: poetry --help
       
-      - name: install dependencies
-        shell: bash
-        run: python -m poetry install
-      - name: Test
-        run: |
-          poetry run python manage.py test
+    - name: install dependencies
+      shell: bash
+      run: python -m poetry install
+    - name: Test
+      run: |
+        poetry run python manage.py test
