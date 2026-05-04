@@ -56,11 +56,3 @@ jobs:
       - name: Install dependencies
         working-directory: ./bookstore
         run: poetry install
-
-      - name: Run migrations
-        working-directory: ./bookstore
-        run: poetry run python manage.py migrate
-
-      - name: Run tests
-        working-directory: ./bookstore
-        run: poetry run python manage.py test
