@@ -1,17 +1,12 @@
 name: Python application
-
 on: [push]
-
 jobs:
   build:
     runs-on: ubuntu-latest
-
     strategy: 
       fail-fast: false
       matrix:
         python-version: [3.13]
-        poetry-version: [2.3.2]
-
     services:
       postgres:
         image: postgres:15
@@ -26,7 +21,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-
     env:
       DEBUG: 1
       DJANGO_SECRET_KEY: batata
@@ -37,22 +31,17 @@ jobs:
       SQL_PASSWORD: dev
       SQL_HOST: localhost
       SQL_PORT: 5432
-
     steps:
       - uses: actions/checkout@v2
-
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-
-      - name: Set up Poetry ${{ matrix.poetry-version }}
-        working-directory: ./bookstore
+      - name: Install Dependencies
         run: |
-          python -m ensurepip
           python -m pip install --upgrade pip
-          python -m pip install poetry==${{ matrix.poetry-version }}
-
-      - name: Install dependencies
-        working-directory: ./bookstore
-        run: poetry install
+          pip install -r requirements.txt
+      - name: Run Migrations
+        run: python manage.py migrate --noinput
+      - name: Run tests
+        run: python manage.py test
