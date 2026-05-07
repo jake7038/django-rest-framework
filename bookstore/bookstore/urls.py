@@ -17,15 +17,18 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, re_path, include
-import debug_toolbar
 from api.views import home
 from rest_framework.authtoken.views import obtain_auth_token
+import os
 
 urlpatterns = [
-    path('__debug__/', include(debug_toolbar.urls)),
     path("", home),  
     path("admin/", admin.site.urls),
     re_path('bookstore/(?P<version>(v1|v2))/', include('order.urls')),
     re_path('bookstore/(?P<version>(v1|v2))/', include('product.urls')),
     path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
 ]
+
+if os.getenv('DEBUG') == 'True':
+    import debug_toolbar
+    urlpatterns += [path('__debug__/',
